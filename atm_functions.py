@@ -1,9 +1,11 @@
 import user_menu
+from datastore import list_of_transactions
+from datetime import date
 
 def change_pin(user):
     current_pin = input("Enter you current four digit PIN number:\n")
     pin_changed=False
-    count = 2       
+    count = 3       
     while(count != 0):
         if (user['PIN']==current_pin):
             print(" ")
@@ -51,6 +53,10 @@ def withdrawal(user):
     
     if user['OVERDRAFT'] == True:
         if amount <= 400.00:
+            balance_after = user['BALANCE'] - amount
+            today = date.today()
+            today_format = today.strftime("%Y-%m-%d")
+            list_of_transactions.append({"DATE": today_format, "USERID": user['USERID'],"TRANSACTION": "Withdrawal", "AMOUNT": format_amount(amount), "BALANCE_BEFORE": format_amount(user['BALANCE']), "BALANCE_AFTER": format_amount(balance_after)})
             user['BALANCE'] -= amount
             print(" ")
             print("Withdrawal authorized. Your money is being released now")
@@ -64,6 +70,10 @@ def withdrawal(user):
     
     else:
         if amount <= user['BALANCE'] and amount <=400:
+            balance_after = user['BALANCE'] - amount
+            today = date.today()
+            today_format = today.strftime("%Y-%m-%d")
+            list_of_transactions.append({"DATE": today_format, "USERID": user['USERID'],"TRANSACTION": "Withdrawal", "AMOUNT": format_amount(amount), "BALANCE_BEFORE": format_amount(user['BALANCE']), "BALANCE_AFTER": format_amount(balance_after)})
             user['BALANCE'] -= amount
             print(" ")
             print("Withdrawal authorized. Your money is being released now")
@@ -89,7 +99,12 @@ def lodgement(user):
         print('')
         print('Lodgement amount must be a number be greater than 0\n')
         amount = float(input('Please enter an amount:\n'))
-     
+
+        
+    balance_after = user['BALANCE'] + amount
+    today = date.today()
+    today_format = today.strftime("%Y-%m-%d")
+    list_of_transactions.append({"DATE": today_format, "USERID": user['USERID'],"TRANSACTION": "Lodgement", "AMOUNT": format_amount(amount), "BALANCE_BEFORE": format_amount(user['BALANCE']), "BALANCE_AFTER": format_amount(balance_after)})
     user['BALANCE'] += amount
     print(" ")
     print(f"Lodgement of {amount} in now added to you account balance.\nThank you!")
@@ -99,10 +114,10 @@ def lodgement(user):
     user_menu.user_menu(user)
 
 def statement(user, transactions):
-    format_balance = "{:.2f}".format(user['BALANCE'])
+    #format_balance = "{:.2f}".format(user['BALANCE'])
     print(f"User_ID: {user['USERID']}") 
     print(f"Name: {user['NAME']}")
-    print(f"Balance: {format_balance}")
+    print(f"Balance: {format_amount(user['BALANCE'])}")
 
     user_transactions = []
 
@@ -112,7 +127,7 @@ def statement(user, transactions):
         print(" ")
         print("Date".ljust(15), "Transaction".ljust(15), "Amount (€)".ljust(15), "Balance (€)".ljust(20))
         print("----".ljust(15), "-----------".ljust(15), "---------".ljust(15), "----------".ljust(20))
-        print(format_balance.rjust(54))
+        print(format_amount(user['BALANCE']).rjust(54))
         
 
     else:
@@ -121,7 +136,7 @@ def statement(user, transactions):
         print(" ")
         print("Date".ljust(15), "Transaction".ljust(15), "Amount".ljust(15), "Balance".ljust(20))
         print("----".ljust(15), "-----------".ljust(15), "------".ljust(15), "-------".ljust(20))
-        print(format_balance.rjust(54))
+        print(format_amount(user['BALANCE']).rjust(54))
 
     for transaction in transactions:
         if transaction['USERID'] == user['USERID']:
@@ -131,7 +146,9 @@ def statement(user, transactions):
     count = 0
     while count < 10:
         for transaction in user_transactions:
-            print(f"{transaction['DATE'].ljust(15)} {transaction['TRANSACTION'].ljust(15)} {transaction['AMOUNT'].ljust(15)} {transaction['BALANCE_AFTER'].ljust(20)}")
+            print(f"{transaction['DATE'].ljust(15)} {transaction['TRANSACTION'].ljust(15)} {str(transaction['AMOUNT']).ljust(15)} {str(transaction['BALANCE_AFTER']).ljust(20)}")
             count += 1
            
-    
+def format_amount(amount):
+    formated_amount = "{:.2f}".format(amount)
+    return formated_amount    
