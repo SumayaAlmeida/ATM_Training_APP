@@ -2,6 +2,9 @@ import os
 from datastore import user_list
 from datastore import list_of_transactions
 from atm_functions import change_pin
+from atm_functions import withdrawal
+from atm_functions import lodgement
+from atm_functions import statement
 
 
 def clear_screen():
@@ -14,7 +17,7 @@ def user_menu(user):
     print("1. Change Pin")
     print("2. Withdrawal")
     print("3. Lodgement")
-    print("4. View last 10 days statement")
+    print("4. View last 10 transctions statement")
     print("5. Exit\n")
     
     choice= input("Please choose an option (1-5): \n")
@@ -25,23 +28,26 @@ def user_menu(user):
         change_pin(user)
         user_menu(user)
     elif(choice == "2"):
-        print("You selected Option two!\n")
-        #see_list_of_books.printbook_list()
+        print("You selected Withdrawal!\n")
+        withdrawal(user)
         input("Return to continue...")
         user_menu(user)
         
     elif(choice == "3"):
-        print("You selected Option three!\n")
+        print("You selected Lodgement!\n")
+        lodgement(user)
         input("Return to continue...")
         user_menu(user)
             
     elif(choice == "4"):
-        print("You selected Option four!\n")
+        print("You selected Statement!\n")
+        statement(user, list_of_transactions)
         input("Return to continue...")
         user_menu(user)
                
     elif(choice == "5"):
-        print("Bye!")
+        print("Thanks for using The Green Bank!")
+        exit()
 
     else:
         print("Please return to menu and select a digit from 1 to 5")
