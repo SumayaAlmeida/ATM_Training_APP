@@ -1,6 +1,5 @@
 import os
 from datastore import user_list
-from datastore import list_of_transactions
 from user_menu import user_menu
 
 

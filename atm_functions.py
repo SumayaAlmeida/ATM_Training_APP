@@ -45,11 +45,20 @@ def change_pin(user):
     user_menu.user_menu(user)
            
 def withdrawal(user):
-    amount = int(float(input("Enter the amount you would like to withdrawal:\n")))
+    try:
+        amount = int(float(input("Enter the amount you would like to withdrawal:\n")))
+    except ValueError:
+        amount = float(input('Please enter a number:\n'))
+    
     while (amount%10 != 0):
         print('')
         print('We have available the following notes: 10, 20, 50\n')
-        amount = int(float(input('Please enter an amount that is multiple of 10:\n')))
+        try:
+            amount = int(float(input('Please enter an amount that is multiple of 10:\n')))
+        except ValueError:
+            amount = float(input('Please enter a number:\n'))
+    
+        
     
     if user['OVERDRAFT'] == True:
         if amount <= 400.00:
@@ -86,7 +95,7 @@ def withdrawal(user):
             print("------------------------ ")
             input("Return to continue...")
         
-        user_menu.user_menu(user)
+    user_menu.user_menu(user)
 
        
 def lodgement(user):
@@ -97,8 +106,11 @@ def lodgement(user):
 
     while (not amount > 0):
         print('')
-        print('Lodgement amount must be a number be greater than 0\n')
-        amount = float(input('Please enter an amount:\n'))
+        print('Lodgement amount must be a number greater than 0\n')
+        try:
+            amount = float(input("Enter the amount you would like to Lodge:\n"))
+        except ValueError:
+            amount = float(input('Please enter a number:\n'))
 
         
     balance_after = user['BALANCE'] + amount
@@ -152,3 +164,29 @@ def statement(user, transactions):
 def format_amount(amount):
     formated_amount = "{:.2f}".format(amount)
     return formated_amount    
+
+def online_help():
+    print("CHANGE PIN in easy steps: ")
+    print("1. Enter you current 4-digit PIN")
+    print("2. Enter you new 4-digit PIN")
+    print("Print changed!!")
+    print("===================================")
+    print("")
+    print("WITHDRAWAL in easy steps: ")
+    print("1. Enter a value that is divisible by 10. Examples: 10, 20, 50, 100, 120")
+    print("2. Make sure the amount to withdraw is within your balance/ overdraft limits and also less than 400")
+    print("Withdrawal accepted!")
+    print("===================================")
+    print("")
+    print("LODGEMENT in easy steps: ")
+    print("1. Enter value that you want to lodge into you account")
+    print("2. Make sure you enter numeric values and not words.\nIf the amount contains cents please use dot (not comma) to separate the values.\n EXEMPLES: 50.25, 120.99, 345.60")
+    print("LODGE accepted!")
+    print("===================================")
+    print("")
+    print("STATEMENT in easy steps: ")
+    print("1. Just press 4 on the main menu")
+    print("2. Your balance and latest 10 transactions will be displayed automatically!")
+    print("STATEMENT displayed!")
+    print("===================================")
+    print("")
